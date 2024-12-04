@@ -32,9 +32,20 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
         const searchCallback = async () => {
             setLoading(true);
             try {
-                // TODO: Change the endpoint according to queryType
-                const response = await fetch(ENDPOINT + queryValue, {
-                    method: "GET",
+                let request_param = {}
+                switch (queryType) {
+                    case "Search by Nama":
+                        request_param = queryValue
+                        break;
+                    case "Search by Bahan":
+                        request_param = 'ingredients'
+                        break;
+                    case "Search by Kategori":
+                        request_param = 'category'
+                        break;
+                }
+                const response = await fetch(ENDPOINT + `?${request_param}=${queryValue}`, {
+                    method: "GET"
                 });
                 if (!response.ok) {
                     throw new Error("Failed to send message");
@@ -58,7 +69,7 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                         <Button type="submit" onClick={searchCallback} disabled={loading}>
                             {loading ? (
                                 <span className="flex items-center">
-                                    <span className="spinner-border animate-spin mr-2"></span> {/* Spinner */}
+                                    <span className="spinner-border animate-spin mr-2"></span>
                                     Loading...
                                 </span>
                             ) : (
