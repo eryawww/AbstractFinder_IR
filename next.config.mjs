@@ -3,7 +3,7 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-      domains: ['via.placeholder.com'], // Add the placeholder domain here
+      domains: ['via.placeholder.com', 'commons.wikimedia.org'], // Add the placeholder domain here
     },
   };
 
