@@ -112,4 +112,4 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
     }
 )
 
-export { SearchComponent };
+export default SearchComponent;
