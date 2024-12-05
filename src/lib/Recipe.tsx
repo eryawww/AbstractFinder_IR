@@ -1,6 +1,6 @@
 class Recipe {
     title: string;
-    description: string;
+    description: string | null;
     cuisine: string;
     url: string;
     wikidata: string | null;
@@ -21,7 +21,7 @@ class Recipe {
 
     constructor(
         title: string,
-        description: string,
+        description: string | null,
         cuisine: string,
         url: string,
         wikidata: string | null,
@@ -41,7 +41,7 @@ class Recipe {
         country: string | null
     ) {
         this.title = title;
-        this.description = description;
+        this.description = description?? `${title} yang dibuat dengan ${ingredients}`;
         this.cuisine = cuisine;
         this.url = url;
         this.wikidata = wikidata;

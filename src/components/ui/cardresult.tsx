@@ -43,26 +43,34 @@ const SearchResultCard = React.forwardRef<HTMLDivElement, { recipe: Recipe }>(
                     <CardDescription>{recipe.cuisine} Cuisine</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>
-                        {recipe.description}
-                    </p>
+                    { recipe.description &&
+                        <p>
+                            {recipe.description}
+                        </p>
+                    }
                 </CardContent>
                 <CardFooter className="flex flex-col items-start pl-6 space-y-2">
                     <div className="flex space-x-2">
-                        <div className="flex bg-orange-500 rounded p-2 space-x-2">
-                            <CardDescription className="text-white text-center">{recipe.category}</CardDescription>
-                            <BiSolidCategory />
-                        </div>
-                        <div className="flex bg-red-400 rounded p-2 space-x-2">
-                            <CardDescription className="text-white text-center">
-                                {recipe.loves} </CardDescription>
-                            <FaHeart />
-                        </div>
-                        <div className="flex bg-green-500 rounded p-2 space-x-2">
-                            <CardDescription className="text-white text-center">
-                                {recipe.diet} </CardDescription>
-                            <TbBowlFilled />
-                        </div>
+                        {recipe.category &&
+                            <div className="flex bg-orange-500 rounded p-2 space-x-2">
+                                <CardDescription className="text-white text-center">{recipe.category}</CardDescription>
+                                <BiSolidCategory />
+                            </div>
+                        }
+                        {recipe.loves &&
+                            <div className="flex bg-red-400 rounded p-2 space-x-2">
+                                <CardDescription className="text-white text-center">
+                                    {recipe.loves} </CardDescription>
+                                <FaHeart />
+                            </div>
+                        }
+                        {recipe.cuisine &&
+                            <div className="flex bg-green-500 rounded p-2 space-x-2">
+                                <CardDescription className="text-white text-center">
+                                    {recipe.diet} </CardDescription>
+                                <TbBowlFilled />
+                            </div>
+                        }
                     </div>
                     <Button onClick={() => handleNavigateMoreInfo(recipe)}>
                         Show More Information
