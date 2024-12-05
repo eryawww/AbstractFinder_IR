@@ -17,6 +17,7 @@ class Recipe {
     prepTime: string;
     diet: string;
     image: string | null;
+    country: string | null;
 
     constructor(
         title: string,
@@ -37,6 +38,7 @@ class Recipe {
         prepTime: string,
         diet: string,
         image: string | null,
+        country: string | null
     ) {
         this.title = title;
         this.description = description;
@@ -56,6 +58,7 @@ class Recipe {
         this.prepTime = prepTime;
         this.diet = diet;
         this.image = image;
+        this.country = country;
     }
 
     static parse(json: any): Recipe {
@@ -77,7 +80,8 @@ class Recipe {
             json.cookTime,
             json.prepTime,
             json.diet,
-            json.image
+            json.image,
+            json.country
         );
     }
 
@@ -101,6 +105,7 @@ class Recipe {
             prepTime: recipe.prepTime,
             diet: recipe.diet,
             image: recipe.image,
+            country: recipe.country
         };
     }
 }

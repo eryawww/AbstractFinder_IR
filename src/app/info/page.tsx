@@ -106,6 +106,14 @@ const RecipeDetail: React.FC = () => {
         {/* Information Panel */}
         <aside className="w-full lg:w-80 bg-white shadow-lg rounded-xl p-6 space-y-6 sticky top-8">
           <h2 className="text-2xl font-bold text-gray-800">Information</h2>
+          {recipe.country && (
+            <Card className="bg-gray-50 shadow-sm rounded-lg p-4">
+              <CardContent>
+                <h3 className="text-lg font-semibold text-gray-700">Origin</h3>
+                <p className="text-gray-600">{recipe.country}</p>
+              </CardContent>
+            </Card>
+          )}
           {recipe.category && (
             <Card className="bg-gray-50 shadow-sm rounded-lg p-4">
               <CardContent>
