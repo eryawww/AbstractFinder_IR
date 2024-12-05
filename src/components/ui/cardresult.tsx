@@ -1,4 +1,5 @@
 import React from "react"
+import Link from 'next/link'
 
 import {
     Card,
@@ -18,42 +19,20 @@ import {
     SelectValue,
     SelectContent
 } from "@radix-ui/react-select"
+import { useRouter } from 'next/navigation'
 
-class Recipe {
-    title: string;
-    description: string;
-    cuisine: string;
-    url: string;
-    wikidata: string | null;
-
-    constructor(
-        title: string,
-        description: string,
-        cuisine: string,
-        url: string,
-        wikidata: string | null
-    ) {
-        this.title = title;
-        this.description = description;
-        this.cuisine = cuisine;
-        this.url = url;
-        this.wikidata = wikidata;
-    }
-
-    static parse(json: any): Recipe {
-        return new Recipe(
-            json.title,
-            json.description,
-            json.cuisine,
-            json.url,
-            json.wikidata
-        );
-    }
-}
-
+import Recipe from "@/lib/Recipe"
+import { INFOPAGE_ROUTE_PARAMS } from "@/lib/const"
 
 const SearchResultCard = React.forwardRef<HTMLDivElement, {recipe: Recipe }>(
     ({ recipe }, ref) => {
+        const router = useRouter()
+        const handleNavigateMoreInfo = (data: Recipe) => {
+            const jsonData = Recipe.to_json(data)
+            sessionStorage.setItem(INFOPAGE_ROUTE_PARAMS, JSON.stringify(jsonData))
+            router.push('/info')
+        }
+
         return (
             <Card className="w-full">
                 <CardHeader>
@@ -66,8 +45,11 @@ const SearchResultCard = React.forwardRef<HTMLDivElement, {recipe: Recipe }>(
                     </p>
                 </CardContent>
                 <CardFooter className="flex space-x-4">
-                    <Button variant="outline">Recipe Website</Button>
-                    <Button>Show More Information</Button>
+                    <Button variant="outline">
+                        <a href={recipe.url}>Recipe Website</a></Button>
+                    <Button onClick={() => handleNavigateMoreInfo(recipe)}>
+                        Show More Information
+                    </Button>
                 </CardFooter>
             </Card>
         )
