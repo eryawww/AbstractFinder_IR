@@ -6,16 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Recipe from "@/lib/Recipe";
-import { INFOPAGE_ROUTE_PARAMS } from "@/lib/const";
+import { INFOPAGE_ROUTE_PARAMS_CACHEKEY } from "@/lib/const";
 
 const RecipeDetail: React.FC = () => {
   const [recipe, setRecipe] = useState<Recipe>()
 
   useEffect(() => {
-    const route_session_params = sessionStorage.getItem(INFOPAGE_ROUTE_PARAMS)
-    if (route_session_params == null) {
-      console.error("Please Access This Page From /")
-    } else {
+    const route_session_params = sessionStorage.getItem(INFOPAGE_ROUTE_PARAMS_CACHEKEY)
+    if (route_session_params != null) {
       const routerSavedParamsJson = JSON.parse(route_session_params)
       setRecipe(Recipe.parse(routerSavedParamsJson))
     }

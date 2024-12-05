@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Recipe, SearchResultCard } from "@/components/ui/cardresult"
+import { SEARCH_RESULT_HISTORY_CACHEKEY } from "@/lib/const"
 
 const ENDPOINT = 'http://127.0.0.1:8000/api/v1/recipes/search/'
 
@@ -44,8 +45,7 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
             document.getElementById("input-query")?.setAttribute('placeholder', newPlaceholder)
             setQueryType(newValue)
         }
-
-        const searchCallback = async () => {
+        const handleSearchClick = async () => {
             setLoading(true);
             try {
                 let request_param = {}
@@ -67,6 +67,8 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                     throw new Error("Failed to send message");
                 }
                 const jsonData = await response.json();
+                sessionStorage.setItem(SEARCH_RESULT_HISTORY_CACHEKEY, JSON.stringify(jsonData))
+
                 const recipeList: Recipe[] = jsonData.map(Recipe.parse);
                 setRecipeList(recipeList);
             } catch (error) {
@@ -75,6 +77,16 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                 setLoading(false);
             }
         }
+
+        useEffect(() => {
+            const searchResultJsonData = sessionStorage.getItem(SEARCH_RESULT_HISTORY_CACHEKEY)
+            if (searchResultJsonData != null){
+                const savedRecipeData = JSON.parse(searchResultJsonData)
+                const recipeList: Recipe[] = savedRecipeData.map(Recipe.parse);
+                setRecipeList(recipeList);
+            }
+
+        }, [])
 
         return (
             <div ref={ref} className="p-8 space-y-8 rounded-lg shadow-xl m-8">
@@ -127,7 +139,7 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                     </DropdownMenu>
                     <Button
                         type="submit"
-                        onClick={searchCallback}
+                        onClick={handleSearchClick}
                         disabled={loading}
                         className="bg-black text-white hover:bg-blue-700 disabled:opacity-50"
                     >

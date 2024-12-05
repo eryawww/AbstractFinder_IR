@@ -25,14 +25,14 @@ import { TbBowlFilled } from "react-icons/tb";
 import { BiSolidCategory } from "react-icons/bi";
 
 import Recipe from "@/lib/Recipe"
-import { INFOPAGE_ROUTE_PARAMS } from "@/lib/const"
+import { INFOPAGE_ROUTE_PARAMS_CACHEKEY } from "@/lib/const"
 
 const SearchResultCard = React.forwardRef<HTMLDivElement, { recipe: Recipe }>(
     ({ recipe }, ref) => {
         const router = useRouter()
         const handleNavigateMoreInfo = (data: Recipe) => {
             const jsonData = Recipe.to_json(data)
-            sessionStorage.setItem(INFOPAGE_ROUTE_PARAMS, JSON.stringify(jsonData))
+            sessionStorage.setItem(INFOPAGE_ROUTE_PARAMS_CACHEKEY, JSON.stringify(jsonData))
             router.push('/info')
         }
 
