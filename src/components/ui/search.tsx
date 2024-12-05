@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -13,9 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Recipe, SearchResultCard } from "@/components/ui/cardresult"
-import { SEARCH_RESULT_HISTORY_CACHEKEY } from "@/lib/const"
-
-const ENDPOINT = 'http://127.0.0.1:8000/api/v1/recipes/search/'
+import { SEARCH_ENDPOINT, SEARCH_RESULT_HISTORY_CACHEKEY } from "@/lib/const"
 
 type SearchComponentProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -60,7 +57,7 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                         request_param = 'category'
                         break;
                 }
-                const response = await fetch(ENDPOINT + `?${request_param}=${queryValue}`, {
+                const response = await fetch(SEARCH_ENDPOINT + `?${request_param}=${queryValue}`, {
                     method: "GET"
                 });
                 if (!response.ok) {
@@ -80,7 +77,7 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
 
         useEffect(() => {
             const searchResultJsonData = sessionStorage.getItem(SEARCH_RESULT_HISTORY_CACHEKEY)
-            if (searchResultJsonData != null){
+            if (searchResultJsonData != null) {
                 const savedRecipeData = JSON.parse(searchResultJsonData)
                 const recipeList: Recipe[] = savedRecipeData.map(Recipe.parse);
                 setRecipeList(recipeList);
