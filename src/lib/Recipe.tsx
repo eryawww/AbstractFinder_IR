@@ -8,12 +8,14 @@ class Recipe {
     steps: string[];
     category: string;
     totalSteps: number;
+    loves: number;
     totalIngredients: number;
     tags: string;
     author: string;
     rating: number;
     cookTime: string;
     prepTime: string;
+    diet: string;
     image: string | null;
 
     constructor(
@@ -26,12 +28,14 @@ class Recipe {
         ingredients: string[],
         category: string,
         totalSteps: number,
+        loves: number,
         totalIngredients: number,
         tags: string,
         author: string,
         rating: number,
         cookTime: string,
         prepTime: string,
+        diet: string,
         image: string | null,
     ) {
         this.title = title;
@@ -43,12 +47,14 @@ class Recipe {
         this.ingredients = ingredients;
         this.category = category;
         this.totalSteps = totalSteps;
+        this.loves = loves;
         this.totalIngredients = totalIngredients;
         this.tags = tags;
         this.author = author;
         this.rating = rating;
         this.cookTime = cookTime;
         this.prepTime = prepTime;
+        this.diet = diet;
         this.image = image;
     }
 
@@ -63,12 +69,14 @@ class Recipe {
             json.ingredients,
             json.category,
             json.totalSteps,
+            json.loves,
             json.totalIngredients,
             json.tags,
             json.author,
             json.rating,
             json.cookTime,
             json.prepTime,
+            json.diet,
             json.image
         );
     }
@@ -81,6 +89,7 @@ class Recipe {
             url: recipe.url,
             wikidata: recipe.wikidata,
             steps: recipe.steps,
+            loves: recipe.loves,
             ingredients: recipe.ingredients,
             category: recipe.category,
             totalSteps: recipe.totalSteps,
@@ -90,6 +99,7 @@ class Recipe {
             rating: recipe.rating,
             cookTime: recipe.cookTime,
             prepTime: recipe.prepTime,
+            diet: recipe.diet,
             image: recipe.image,
         };
     }

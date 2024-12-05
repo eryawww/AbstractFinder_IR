@@ -1,5 +1,6 @@
 import React from "react"
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import {
     Card,
@@ -19,12 +20,14 @@ import {
     SelectValue,
     SelectContent
 } from "@radix-ui/react-select"
-import { useRouter } from 'next/navigation'
+import { FaHeart } from "react-icons/fa";
+import { TbBowlFilled } from "react-icons/tb";
+import { BiSolidCategory } from "react-icons/bi";
 
 import Recipe from "@/lib/Recipe"
 import { INFOPAGE_ROUTE_PARAMS } from "@/lib/const"
 
-const SearchResultCard = React.forwardRef<HTMLDivElement, {recipe: Recipe }>(
+const SearchResultCard = React.forwardRef<HTMLDivElement, { recipe: Recipe }>(
     ({ recipe }, ref) => {
         const router = useRouter()
         const handleNavigateMoreInfo = (data: Recipe) => {
@@ -37,16 +40,30 @@ const SearchResultCard = React.forwardRef<HTMLDivElement, {recipe: Recipe }>(
             <Card className="w-full">
                 <CardHeader>
                     <CardTitle>{recipe.title}</CardTitle>
-                    <CardDescription>{recipe.cuisine}</CardDescription>
+                    <CardDescription>{recipe.cuisine} Cuisine</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <p>
                         {recipe.description}
                     </p>
                 </CardContent>
-                <CardFooter className="flex space-x-4">
-                    <Button variant="outline">
-                        <a href={recipe.url}>Recipe Website</a></Button>
+                <CardFooter className="flex flex-col items-start pl-6 space-y-2">
+                    <div className="flex space-x-2">
+                        <div className="flex bg-orange-500 rounded p-2 space-x-2">
+                            <CardDescription className="text-white text-center">{recipe.category}</CardDescription>
+                            <BiSolidCategory />
+                        </div>
+                        <div className="flex bg-red-400 rounded p-2 space-x-2">
+                            <CardDescription className="text-white text-center">
+                                {recipe.loves} </CardDescription>
+                            <FaHeart />
+                        </div>
+                        <div className="flex bg-green-500 rounded p-2 space-x-2">
+                            <CardDescription className="text-white text-center">
+                                {recipe.diet} </CardDescription>
+                            <TbBowlFilled />
+                        </div>
+                    </div>
                     <Button onClick={() => handleNavigateMoreInfo(recipe)}>
                         Show More Information
                     </Button>
