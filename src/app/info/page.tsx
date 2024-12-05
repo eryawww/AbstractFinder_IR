@@ -66,16 +66,18 @@ const RecipeDetail: React.FC = () => {
             <section>
               <h2 className="text-3xl font-semibold text-gray-800">Ingredients</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <Card
-                    key={index}
-                    className="shadow-md rounded-lg p-4 transition-transform hover:scale-105"
-                  >
-                    <CardContent>
-                      <p className="font-medium text-gray-700">{ingredient}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+                {recipe.ingredients.map((ingredient, index) =>
+                  ingredient !== "" && (
+                    <Card
+                      key={index}
+                      className="shadow-md rounded-lg p-4 transition-transform hover:scale-105"
+                    >
+                      <CardContent>
+                        <p className="font-medium text-gray-700">{ingredient}</p>
+                      </CardContent>
+                    </Card>
+                  )
+                )}
               </div>
             </section>
           )}

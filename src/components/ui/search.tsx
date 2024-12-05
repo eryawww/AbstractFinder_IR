@@ -46,18 +46,22 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
             setLoading(true);
             try {
                 let request_param = {}
+                let query = queryValue
                 switch (queryType) {
                     case "Search by Name":
                         request_param = 'title'
                         break;
                     case "Search by Ingredients":
-                        request_param = 'ingredients'
+                        request_param = 'ingredients' 
+                        query = query.replace(/ /g, '_')
+                        query = query.replace(/,/g, '+')
                         break;
                     case "Search by Category":
                         request_param = 'category'
                         break;
                 }
-                const response = await fetch(SEARCH_ENDPOINT + `?${request_param}=${queryValue}`, {
+                console.log(SEARCH_ENDPOINT + `?${request_param}=${query}`)
+                const response = await fetch(SEARCH_ENDPOINT + `?${request_param}=${query}`, {
                     method: "GET"
                 });
                 if (!response.ok) {

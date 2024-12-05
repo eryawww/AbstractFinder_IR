@@ -41,7 +41,7 @@ class Recipe {
         country: string | null
     ) {
         this.title = title;
-        this.description = description?? `${title} yang dibuat dengan ${ingredients}`;
+        this.description = description ?? `${title} yang dibuat dengan ${ingredients}`;
         this.cuisine = cuisine;
         this.url = url;
         this.wikidata = wikidata;
@@ -62,13 +62,29 @@ class Recipe {
     }
 
     static parse(json: any): Recipe {
+        let steps: string[];
+        if (Array.isArray(json.steps)) {
+            // If an array, clean up each step
+            steps = json.steps.flatMap((step: string) =>
+                typeof step === "string"
+                    ? step.split(/\r?\n/).map((subStep) => subStep.replace(/^\d+\)\s*/, ""))
+                    : []
+            );
+        } else if (typeof json.steps === "string") {
+            // If a single string, split it and clean up each step
+            steps = json.steps.split(/\r?\n/).map((step: string) => step.replace(/^\d+\)\s*/, ""));
+        } else {
+            // empty array if steps is non array nor string
+            steps = [];
+        }
+
         return new Recipe(
             json.title,
             json.description,
             json.cuisine,
             json.url,
             json.wikidata,
-            json.steps,
+            steps,
             json.ingredients,
             json.category,
             json.totalSteps,

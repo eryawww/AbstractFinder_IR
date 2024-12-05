@@ -57,13 +57,11 @@ const SearchResultCard = React.forwardRef<HTMLDivElement, { recipe: Recipe }>(
                                 <BiSolidCategory />
                             </div>
                         }
-                        {recipe.loves &&
-                            <div className="flex bg-red-400 rounded p-2 space-x-2">
-                                <CardDescription className="text-white text-center">
-                                    {recipe.loves} </CardDescription>
-                                <FaHeart />
-                            </div>
-                        }
+                        <div className="flex bg-red-400 rounded p-2 space-x-2">
+                            <CardDescription className="text-white text-center">
+                                {recipe.loves} </CardDescription>
+                            <FaHeart />
+                        </div>
                         {recipe.cuisine &&
                             <div className="flex bg-green-500 rounded p-2 space-x-2">
                                 <CardDescription className="text-white text-center">
