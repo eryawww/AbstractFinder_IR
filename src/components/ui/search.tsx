@@ -11,67 +11,34 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Recipe, SearchResultCard } from "@/components/ui/cardresult"
-import { SEARCH_ENDPOINT, SEARCH_RESULT_HISTORY_CACHEKEY } from "@/lib/const"
+import { Document, SearchResultCard } from "@/components/ui/cardresult"
+import { MOCK_LLM_ANSWER, MOCK_TASTEGRAPH_SEARCH_RESPONSE, SEARCH_ENDPOINT, SEARCH_RESULT_HISTORY_CACHEKEY } from "@/lib/const"
+import { LlmCard } from "./llmCard"
 
 type SearchComponentProps = React.HTMLAttributes<HTMLDivElement>
 
 const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
     ({ }, ref) => {
-        const [queryType, setQueryType] = useState("Search by Name")
-        const [queryValue, setQueryValue] = useState("")
-        const [recipeList, setRecipeList] = useState<Recipe[]>([])
+        const [queryValue, setQueryValue] = useState<string>("")
+        const [documentList, setRecipeList] = useState<Document[]>([])
+        const [llmAnswer, setLlmAnswer] = useState<string>("")
         const [loading, setLoading] = useState(false);
 
         const handleQueryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             setQueryValue(e.target.value);
-        }
-        const handleQueryTypeInputChange = (newValue: string) => {
-            let newPlaceholder = ""
-            switch (queryType) {
-                case "Search by Name":
-                    newPlaceholder = "Find 'Fried Rice'"
-                    break;
-                case "Search by Ingredients":
-                    newPlaceholder = "Find 'Tortillas Garlic Mozzarella cheese'"
-                    break;
-                case "Search by Category":
-                    newPlaceholder = "Find 'Indian'"
-                    break;
-            }
-            document.getElementById("input-query")?.setAttribute('placeholder', newPlaceholder)
-            setQueryType(newValue)
         }
         const handleSearchClick = async () => {
             setLoading(true);
             try {
                 let request_param = {}
                 let query = queryValue
-                switch (queryType) {
-                    case "Search by Name":
-                        request_param = 'title'
-                        break;
-                    case "Search by Ingredients":
-                        request_param = 'ingredients' 
-                        query = query.replace(/ /g, '_')
-                        query = query.replace(/,/g, '+')
-                        break;
-                    case "Search by Category":
-                        request_param = 'category'
-                        break;
-                }
-                console.log(SEARCH_ENDPOINT + `?${request_param}=${query}`)
-                const response = await fetch(SEARCH_ENDPOINT + `?${request_param}=${query}`, {
-                    method: "GET"
-                });
-                if (!response.ok) {
-                    throw new Error("Failed to send message");
-                }
-                const jsonData = await response.json();
-                sessionStorage.setItem(SEARCH_RESULT_HISTORY_CACHEKEY, JSON.stringify(jsonData))
+                // TODO: configure backend request and remove mock
+                // request two separate endpoint asyncronously
+                const recipeList: Document[] = MOCK_TASTEGRAPH_SEARCH_RESPONSE.map(Document.parse);
+                const llmAnswer: string = MOCK_LLM_ANSWER
 
-                const recipeList: Recipe[] = jsonData.map(Recipe.parse);
                 setRecipeList(recipeList);
+                setLlmAnswer(llmAnswer);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -83,19 +50,19 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
             const searchResultJsonData = sessionStorage.getItem(SEARCH_RESULT_HISTORY_CACHEKEY)
             if (searchResultJsonData != null) {
                 const savedRecipeData = JSON.parse(searchResultJsonData)
-                const recipeList: Recipe[] = savedRecipeData.map(Recipe.parse);
+                const recipeList: Document[] = savedRecipeData.map(Document.parse);
                 setRecipeList(recipeList);
             }
 
         }, [])
 
         return (
-            <div ref={ref} className="p-8 space-y-8 rounded-lg shadow-xl m-8">
+            <div ref={ref} className="p-8 space-y-8 rounded-lg shadow-xl">
                 {/* Header Section */}
-                <div className="flex flex-col items-center space-y-6 py-12 bg-white">
-                    <h1 className="text-4xl font-bold text-gray-900">Explore TasteGraph</h1>
+                <div className="flex flex-col items-center space-y-6 py-8 bg-white">
+                    <h1 className="text-4xl font-bold text-gray-900">Explore AbstractFinder!</h1>
                     <p className="text-lg text-gray-600 text-center">
-                        Instantly Discover Flavors with TasteGraph – Your Culinary Knowledge Hub!
+                        Connecting Ideas, One Abstract at a Time
                     </p>
                 </div>
                 {/* Search Bar */}
@@ -103,41 +70,10 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                     <input
                         id="input-query"
                         type="text"
-                        placeholder="Find 'Fried Rice'"
+                        placeholder="Ask anything"
                         onChange={handleQueryInputChange}
                         className="flex-grow text-gray-600 placeholder-gray-400 focus:outline-none"
                     />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                disabled={loading}
-                                className="border-gray-300 text-gray-700 hover:bg-red-400 bg-blue-500 text-white"
-                            >
-                                {queryType}
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 mt-2 rounded-md shadow-lg border border-gray-200">
-                            <DropdownMenuLabel className="font-semibold text-gray-700">
-                                Pilih Mode Pencarian
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuRadioGroup
-                                value={queryType}
-                                onValueChange={handleQueryTypeInputChange}
-                            >
-                                <DropdownMenuRadioItem value="Search by Name">
-                                    Search by Name
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="Search by Ingredients">
-                                    Search by Ingredients
-                                </DropdownMenuRadioItem>
-                                <DropdownMenuRadioItem value="Search by Category">
-                                    Search by Category
-                                </DropdownMenuRadioItem>
-                            </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                     <Button
                         type="submit"
                         onClick={handleSearchClick}
@@ -154,15 +90,15 @@ const SearchComponent = React.forwardRef<HTMLDivElement, SearchComponentProps>(
                         )}
                     </Button>
                 </div>
-
+                { llmAnswer && <LlmCard answer={llmAnswer}/> }
                 {/* Query Result */}
                 <hr className="border-t border-gray-300" />
                 <div className="w-full space-y-4">
-                    {recipeList.length === 0 && !loading && (
+                    {documentList.length === 0 && !loading && (
                         <p className="text-center text-gray-500">No results found.</p>
                     )}
-                    {recipeList.map((recipe, index) => (
-                        <SearchResultCard recipe={recipe} key={index} />
+                    {documentList.map((document, index) => (
+                        <SearchResultCard document={document} key={index} />
                     ))}
                 </div>
             </div>

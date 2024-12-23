@@ -1,129 +1,33 @@
-class Recipe {
+class Document {
     title: string;
-    description: string | null;
-    cuisine: string;
-    url: string;
-    wikidata: string | null;
-    ingredients: string[];
-    steps: string[];
-    category: string;
-    totalSteps: number;
-    loves: number;
-    totalIngredients: number;
-    tags: string;
+    text: string;
     author: string;
-    rating: number;
-    cookTime: string;
-    prepTime: string;
-    diet: string;
-    image: string | null;
-    country: string | null;
 
     constructor(
         title: string,
-        description: string | null,
-        cuisine: string,
-        url: string,
-        wikidata: string | null,
-        steps: string[],
-        ingredients: string[],
-        category: string,
-        totalSteps: number,
-        loves: number,
-        totalIngredients: number,
-        tags: string,
-        author: string,
-        rating: number,
-        cookTime: string,
-        prepTime: string,
-        diet: string,
-        image: string | null,
-        country: string | null
+        text: string,
+        author: string
     ) {
         this.title = title;
-        this.description = description ?? `${title} yang dibuat dengan ${ingredients}`;
-        this.cuisine = cuisine;
-        this.url = url;
-        this.wikidata = wikidata;
-        this.steps = steps;
-        this.ingredients = ingredients;
-        this.category = category;
-        this.totalSteps = totalSteps;
-        this.loves = loves;
-        this.totalIngredients = totalIngredients;
-        this.tags = tags;
+        this.text = text;
         this.author = author;
-        this.rating = rating;
-        this.cookTime = cookTime;
-        this.prepTime = prepTime;
-        this.diet = diet;
-        this.image = image;
-        this.country = country;
     }
 
-    static parse(json: any): Recipe {
-        let steps: string[];
-        if (Array.isArray(json.steps)) {
-            // If an array, clean up each step
-            steps = json.steps.flatMap((step: string) =>
-                typeof step === "string"
-                    ? step.split(/\r?\n/).map((subStep) => subStep.replace(/^\d+\)\s*/, ""))
-                    : []
-            );
-        } else if (typeof json.steps === "string") {
-            // If a single string, split it and clean up each step
-            steps = json.steps.split(/\r?\n/).map((step: string) => step.replace(/^\d+\)\s*/, ""));
-        } else {
-            // empty array if steps is non array nor string
-            steps = [];
-        }
-
-        return new Recipe(
+    static parse(json: any): Document {
+        return new Document(
             json.title,
-            json.description,
-            json.cuisine,
-            json.url,
-            json.wikidata,
-            steps,
-            json.ingredients,
-            json.category,
-            json.totalSteps,
-            json.loves,
-            json.totalIngredients,
-            json.tags,
-            json.author,
-            json.rating,
-            json.cookTime,
-            json.prepTime,
-            json.diet,
-            json.image,
-            json.country
+            json.text,
+            json.author
         );
     }
 
-    static to_json(recipe: Recipe): any {
+    static to_json(document: Document): any {
         return {
-            title: recipe.title,
-            description: recipe.description,
-            cuisine: recipe.cuisine,
-            url: recipe.url,
-            wikidata: recipe.wikidata,
-            steps: recipe.steps,
-            loves: recipe.loves,
-            ingredients: recipe.ingredients,
-            category: recipe.category,
-            totalSteps: recipe.totalSteps,
-            totalIngredients: recipe.totalIngredients,
-            tags: recipe.tags,
-            author: recipe.author,
-            rating: recipe.rating,
-            cookTime: recipe.cookTime,
-            prepTime: recipe.prepTime,
-            diet: recipe.diet,
-            image: recipe.image,
-            country: recipe.country
+            title: document.title,
+            text: document.text,
+            author: document.author
         };
     }
 }
 
-export default Recipe;
+export default Document;

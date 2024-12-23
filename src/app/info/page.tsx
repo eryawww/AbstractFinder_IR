@@ -5,17 +5,17 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Recipe from "@/lib/Recipe";
+import Document from "@/lib/Recipe";
 import { INFOPAGE_ROUTE_PARAMS_CACHEKEY } from "@/lib/const";
 
 const RecipeDetail: React.FC = () => {
-  const [recipe, setRecipe] = useState<Recipe>()
+  const [recipe, setRecipe] = useState<Document>()
 
   useEffect(() => {
     const route_session_params = sessionStorage.getItem(INFOPAGE_ROUTE_PARAMS_CACHEKEY)
     if (route_session_params != null) {
       const routerSavedParamsJson = JSON.parse(route_session_params)
-      setRecipe(Recipe.parse(routerSavedParamsJson))
+      setRecipe(Document.parse(routerSavedParamsJson))
     }
   }, []);
 
