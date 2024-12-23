@@ -1,12 +1,11 @@
-import { SearchComponent } from "@/components/ui/search";
-import Image from "next/image";
+import { SearchContainer } from "@/components/search/SearchContainer";
 
 export default function Home() {
   return (
-    <div className="absolute bg-gunmetal insert-0 p-12 w-full min-h-screen">
-      <div className="bg-white border rounded-lg">
-        <SearchComponent/>
+    <main className="min-h-screen bg-slate-100 p-4 sm:p-8 lg:p-12">
+      <div className="mx-auto max-w-5xl bg-white rounded-xl shadow-lg">
+        <SearchContainer />
       </div>
-    </div>
+    </main>
   );
 }
