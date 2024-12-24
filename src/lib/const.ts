@@ -1,5 +1,10 @@
-const SEARCH_ENDPOINT = (query: string) => { return `/api/retriever/search?query=${query}` }
- 
+const SEARCH_ENDPOINT = (query: string) => { 
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  if (process.env.NODE_ENV === 'production') {
+    return `/api/retriever/search?query=${query}`
+  }  
+  return `${baseUrl}/api/retriever/search?query=${query}`
+} 
 const MOCK_RETRIEVAL_RESPONSE = [
   {
     "title": "ayam betutu daun singkong",

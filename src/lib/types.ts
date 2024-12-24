@@ -6,9 +6,21 @@ export interface SearchResult {
 }
 
 export interface SearchResponse {
-  original: SearchResult;
-  refined: SearchResult;
-  summarization: string;
+  original: {
+    results: SearchResult[]
+  }
+  refined: {
+    results: SearchResult[]
+  }
+  summarization: string
+}
+
+export interface PaginationProps {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  totalItems: number
+  itemsPerPage: number
 }
   
 export type ResultType = 'original' | 'refined';

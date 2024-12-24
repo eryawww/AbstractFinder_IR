@@ -1,3 +1,4 @@
+// hooks/useSearch.ts
 import { useEffect, useState } from 'react'
 import RetrievedDocument from "@/lib/RetrievedDocument"
 import { SEARCH_ENDPOINT } from "@/lib/const"
@@ -10,6 +11,7 @@ export const useSearch = () => {
   const [resultType, setResultType] = useState<ResultType>('original')
   const [llmAnswer, setLlmAnswer] = useState<string>("")
   const [loading, setLoading] = useState(false)
+  const [llmLoading, setLlmLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -21,10 +23,11 @@ export const useSearch = () => {
       try {
         const cached = sessionStorage.getItem('search_history')
         if (cached) {
-          const { original, refined, type } = JSON.parse(cached)
+          const { original, refined, type, answer } = JSON.parse(cached)
           setOriginalDocuments(original.map(RetrievedDocument.parse))
           setRefinedDocuments(refined.map(RetrievedDocument.parse))
           setResultType(type || 'original')
+          if (answer) setLlmAnswer(answer)
         }
       } catch (err) {
         console.error('Error loading cached results:', err)
@@ -37,11 +40,20 @@ export const useSearch = () => {
     if (!query.trim()) return
 
     setLoading(true)
+    setLlmLoading(true)
     setError(null)
+    setLlmAnswer("")
 
     try {
       const response = await fetch(SEARCH_ENDPOINT(query))
+      
       if (!response.ok) {
+        // Only set error if it's a server error, not for no results
+        if (response.status === 404) {
+          setOriginalDocuments([])
+          setRefinedDocuments([])
+          return
+        }
         throw new Error(`Search failed: ${response.statusText}`)
       }
 
@@ -49,25 +61,30 @@ export const useSearch = () => {
       
       const original = data.original.results.map(RetrievedDocument.parse)
       const refined = data.refined.results.map(RetrievedDocument.parse)
-      const summarization = data.summarization
-
+      
       setOriginalDocuments(original)
       setRefinedDocuments(refined)
+      
+      if (data.summarization) {
+        setLlmAnswer(data.summarization)
+      }
 
       sessionStorage.setItem('search_history', JSON.stringify({
         original,
         refined,
-        type: resultType
+        type: resultType,
+        answer: data.summarization
       }))
-
-      setLlmAnswer(summarization)
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred during search'
       setError(errorMessage)
-      console.error('Search error:', err)
+      setLlmAnswer("")
+      setOriginalDocuments([])
+      setRefinedDocuments([])
     } finally {
       setLoading(false)
+      setLlmLoading(false)
     }
   }
 
@@ -81,5 +98,14 @@ export const useSearch = () => {
     }
   }
 
-  return { documents, llmAnswer, loading, error, search, resultType, toggleResultType }
+  return { 
+    documents, 
+    llmAnswer, 
+    loading, 
+    llmLoading,
+    error, 
+    search, 
+    resultType, 
+    toggleResultType 
+  }
 }
