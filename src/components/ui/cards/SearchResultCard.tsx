@@ -4,15 +4,25 @@ import { ResultCardProps } from "./types"
 import { cn } from "@/lib/utils"
 
 export const SearchResultCard = React.forwardRef<HTMLDivElement, ResultCardProps>(
-  ({ document, className, ...props }, ref) => (
-    <Card ref={ref} className={cn("w-full", className)} {...props}>
-      <CardHeader>
-        <CardTitle>{document.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-700 leading-relaxed">{document.text}</p>
-      </CardContent>
-    </Card>
-  )
+  ({ document, className, ...props }, ref) => {
+    const truncateText = (text: string, wordLimit: number) => {
+      const words = text.split(' ')
+      if (words.length <= wordLimit) return text
+      return words.slice(0, wordLimit).join(' ') + '...'
+    }
+
+    return (
+      <Card ref={ref} className={cn("w-full", className)} {...props}>
+        <CardHeader>
+          <CardTitle>{document.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="relative overflow-hidden">
+            <p className="text-gray-700 leading-relaxed">{truncateText(document.text, 50)}</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 )
 SearchResultCard.displayName = "SearchResultCard"

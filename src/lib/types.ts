@@ -8,6 +8,7 @@ export interface SearchResult {
 export interface SearchResponse {
   original: SearchResult;
   refined: SearchResult;
+  summarization: string;
 }
   
 export type ResultType = 'original' | 'refined';

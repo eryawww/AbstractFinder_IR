@@ -30,7 +30,6 @@ export const useSearch = () => {
         console.error('Error loading cached results:', err)
       }
     }
-
     loadCachedResults()
   }, [])
 
@@ -42,7 +41,6 @@ export const useSearch = () => {
 
     try {
       const response = await fetch(SEARCH_ENDPOINT(query))
-      
       if (!response.ok) {
         throw new Error(`Search failed: ${response.statusText}`)
       }
@@ -51,6 +49,7 @@ export const useSearch = () => {
       
       const original = data.original.results.map(RetrievedDocument.parse)
       const refined = data.refined.results.map(RetrievedDocument.parse)
+      const summarization = data.summarization
 
       setOriginalDocuments(original)
       setRefinedDocuments(refined)
@@ -61,7 +60,7 @@ export const useSearch = () => {
         type: resultType
       }))
 
-      setLlmAnswer("")
+      setLlmAnswer(summarization)
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred during search'
