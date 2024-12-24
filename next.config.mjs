@@ -1,16 +1,17 @@
 /** @type {import('next').NextConfig} */
-// next.config.js
 const nextConfig = {
-    reactStrictMode: true,
-    images: {
-      remotePatterns: [
-        {
-          protocol: 'http',
-          hostname: 'commons.wikimedia.org',
-          pathname: '**',
-        },
-      ], 
-    },
-  };
-
-export default nextConfig;
+  reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://34.143.174.117:8000/api/:path*'
+      }
+    ]
+  },
+  experimental: {
+    allowMiddlewareResponseBody: true
+  }
+ };
+ 
+ export default nextConfig;

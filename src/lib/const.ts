@@ -1,4 +1,4 @@
-const SEARCH_ENDPOINT = (query: string) => { return `http://34.143.174.117:8000/api/retriever/search?query=${query}` }
+const SEARCH_ENDPOINT = (query: string) => { return `/api/retriever/search?query=${query}` }
  
 const MOCK_RETRIEVAL_RESPONSE = [
   {
