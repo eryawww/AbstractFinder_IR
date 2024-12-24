@@ -46,19 +46,20 @@ export const useSearch = () => {
 
     try {
       const response = await fetch(SEARCH_ENDPOINT(query))
+      const data = await response.json()
+
+      if (data.original?.results?.length === 0 && data.refined?.results?.length === 0) {
+        setOriginalDocuments([])
+        setRefinedDocuments([])
+        setLlmAnswer("")
+        setError(null)
+        return
+      }
       
       if (!response.ok) {
-        // Only set error if it's a server error, not for no results
-        if (response.status === 404) {
-          setOriginalDocuments([])
-          setRefinedDocuments([])
-          return
-        }
-        throw new Error(`Search failed: ${response.statusText}`)
+        throw new Error(data.message || 'An error occurred during search')
       }
 
-      const data: SearchResponse = await response.json()
-      
       const original = data.original.results.map(RetrievedDocument.parse)
       const refined = data.refined.results.map(RetrievedDocument.parse)
       
@@ -78,6 +79,7 @@ export const useSearch = () => {
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred during search'
+      console.error('Search error:', err)
       setError(errorMessage)
       setLlmAnswer("")
       setOriginalDocuments([])

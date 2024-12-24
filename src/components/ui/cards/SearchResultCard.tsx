@@ -12,17 +12,28 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, ResultCardProps
     }
 
     return (
-      <Card ref={ref} className={cn("w-full", className)} {...props}>
+      <Card 
+        ref={ref} 
+        className={cn(
+          "w-full animate-in fade-in-0 slide-in-from-bottom-8 duration-500",
+          "motion-safe:transition-all motion-safe:ease-out",
+          className
+        )} 
+        {...props}
+      >
         <CardHeader>
           <CardTitle>{document.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="relative overflow-hidden">
-            <p className="text-gray-700 leading-relaxed">{truncateText(document.text, 50)}</p>
+            <p className="text-gray-700 leading-relaxed">
+              {truncateText(document.text, 50)}
+            </p>
           </div>
         </CardContent>
       </Card>
     )
   }
 )
+
 SearchResultCard.displayName = "SearchResultCard"

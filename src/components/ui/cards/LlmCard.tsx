@@ -10,13 +10,21 @@ interface LlmCardProps {
 
 export const LlmCard = React.forwardRef<HTMLDivElement, LlmCardProps>(
   ({ answer, isLoading = false, className, ...props }, ref) => (
-    <Card ref={ref} className={cn("w-full", className)} {...props}>
+    <Card 
+      ref={ref} 
+      className={cn(
+        "w-full",
+        !isLoading && "animate-in fade-in-0 slide-in-from-bottom-8 duration-500 motion-safe:transition-all motion-safe:ease-out",
+        className
+      )} 
+      {...props}
+    >
       <CardHeader>
         <CardTitle>
           {isLoading ? (
             <div className="h-6 w-24 bg-gray-200 rounded animate-pulse" />
           ) : (
-            "Assistant"
+            "Retrieval Summarization"
           )}
         </CardTitle>
         <CardDescription>
